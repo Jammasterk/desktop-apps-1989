@@ -4,6 +4,10 @@ const app = express()
 const PORT = process.env.PORT || 3500
 const morgan = require("morgan")
 require('dotenv').config
+const cloudinary = require('cloudinary')
+const multer = require('multer')
+
+console.log(multer)
 
 app.use(express.json())
 app.use(morgan('dev'))
