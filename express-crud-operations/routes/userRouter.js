@@ -53,9 +53,9 @@ userRouter.get(`/users/:userId`, async (req, res, next) => {
 
 // UPDATE request
 
-userRouter.patch("/users/:userId", async (req, res) => {
+userRouter.patch("/users/:userId", upload.single("image"), async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["email", "password", "username"];
+  const allowedUpdates = ["email", "password", "username", "avatar"];
   const isValid = updates.every((update) => {
     return allowedUpdates.includes(update);
   });
@@ -64,7 +64,18 @@ userRouter.patch("/users/:userId", async (req, res) => {
     return res.status(400).send({ error: "Invalid updates" });
   }
   try {
-    const user = await User.findByIdAndUpdate(req.params.userId, req.body, {
+	await cloudinary.uploader.destroy(info.cloudinary_id);
+    // Upload image to cloudinary
+    let result;
+    if (req.file) {
+      result = await cloudinary.uploader.upload(req.file.path);
+    }
+    const data = {
+      username: req.body.username || info.username,
+      avatar: result.secure_url || info.avatar,
+      cloudinary_id: result.public_id || info.cloudinary_id,
+    };
+    const user = await User.findByIdAndUpdate(req.params.userId, data, {
       new: true,
       runValidators: true,
     });
@@ -80,6 +91,7 @@ userRouter.patch("/users/:userId", async (req, res) => {
     res.status(400).send();
   }
 });
+
 userRouter.delete("/users/:userId", async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.userId);
