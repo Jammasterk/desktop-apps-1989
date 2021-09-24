@@ -1,0 +1,6 @@
+	apiKey: "AIzaSyALjkgi8-yfO60aHxaLQS0ah2e91JGTvAg",
+	authDomain: "fitness-app-7fefa.firebaseapp.com",
+	projectId: "fitness-app-7fefa",
+	storageBucket: "fitness-app-7fefa.appspot.com",
+	messagingSenderId: "782480765563",
+	appId: "1:782480765563:web:7ae6910a6bd474a63328de",
